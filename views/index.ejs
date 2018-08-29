@@ -1,0 +1,52 @@
+<html>
+<head>
+    <title>Sockets</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Must add script tag for socket! !-->
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <script type ="text/javascript">
+        $(document).ready(function (){
+            var socket = io(); //1
+            $('form').submit(function(e){
+                e.preventDefault();
+                socket.emit('posting_form', {
+                    name: $('#name').val(),
+                    location: $('#location').val(),
+                    comment: $('#comments').val()
+                });
+            });
+            //4 listens for message sent from server and appends the html message to the page.
+            socket.on('new_message', function(data) {
+                $('#message').html('<h3>You emitted the following information to the server: <strong>'+ JSON.stringify(data.msg) +'</strong></h3>').slideDown();
+            });
+            //5 listens for the random number sent from server and appends it to the page.
+            socket.on('rand_num', function(num) {
+               $('#message').append('<p>Your lucky number emitted by the server is: <strong>'+ num.number +'</strong></p>');
+            });
+        });
+
+            
+         
+    </script>
+</head>
+<body>
+    <div id="message"></div>
+    <div id="number"></div>
+    <h1>Sockets Survey Form</h1>
+    <body>
+    <form action="" method="">
+        <label>Your Name:</label>
+        <input type="text" name="name" id="name">
+        <label>Dojo Location:</label>
+        <select name="location" id="location">
+            <option>Chicago</option>
+            <option>New York</option>
+            <option>Los Angeles</option>
+        </select>
+        <label>Comments:</label>
+        <textarea name="comments" id="comments"></textarea>
+        <input class="form" type="submit" name="submit" value="Submit">
+    </form>  
+</body>
+</html>
